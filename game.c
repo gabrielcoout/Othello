@@ -6,6 +6,7 @@ void iniciarJogo(int campos[8][8]);
 int jogada(int jogador, int campos[8][8]);
 int validarJogada(int jogador, int campos[8][8]);
 int jogadasValidas(int campos[8][8]);
+void limparJogadasValidas(int campos[8][8]);
 
 //funcoes de debug
 void debugJogo(int campos[8][8]);
@@ -17,16 +18,11 @@ int main() {
 	int jogador = 1;
 
 	iniciarJogo(campos);
-	jogada(1, campos);
-	imprimirJogo(campos);
-	debugJogo(campos);
 
-	jogada(2, campos);
+	jogadasValidas(campos):
 	imprimirJogo(campos);
-	debugJogo(campos);
-
+	limparJogadasValidas(campos);
 	jogada(jogador, campos);
-
 	imprimirJogo(campos);
 
 	return 0;
@@ -104,20 +100,40 @@ int jogada(int jogador, int campos[8][8]){
 	return 1;
 }
 
+int validarJogada(jogador, campos[8][8]){
+	
+	
+
+
+	return 1
+}
+
 
 //Calcula e retorna um vetor com todas as possibilidades de jogadas possíveis para o jogador atual
-int jogadasValidas(jogador, campos[8][8]){
-	
-	int jogadasValidas[8][8];
+void jogadasValidas(jogador, campos[8][8]){
 
 	for(int i = 0; i < 8; i++){
 		for(int j = 0; j < 8; j++){
-				
+			if(validarJogada(jogador, campos[i][j] == 0){
+				campos[i][j] = 3;
+			}
 		}
 	}
 
+	return;
+}
 
-	return jogadasValidas;
+void limparJogadasValidas(campos[8][8]){
+	
+	for(int i = 0; i < 8; i++){
+		for(int j = 0; j < 8; j++){
+			if(campos[i][j] == 3){
+				campos[i][j] = 0;
+			}	
+		}
+	}
+
+	return;
 }
 
 
