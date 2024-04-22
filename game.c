@@ -4,8 +4,8 @@
 void imprimirJogo(int campos[8][8]);
 void iniciarJogo(int campos[8][8]);
 int jogada(int jogador, int campos[8][8]);
-int validarJogada(int jogador, int campos[8][8]);
-int jogadasValidas(int campos[8][8]);
+void validarJogada(int jogador, int campos[8][8]);
+int jogadasValidas(int jogador, int campos[8][8]);
 void limparJogadasValidas(int campos[8][8]);
 
 //funcoes de debug
@@ -19,7 +19,7 @@ int main() {
 
 	iniciarJogo(campos);
 
-	jogadasValidas(campos):
+	jogadasValidas(jogador, campos);
 	imprimirJogo(campos);
 	limparJogadasValidas(campos);
 	jogada(jogador, campos);
@@ -100,21 +100,31 @@ int jogada(int jogador, int campos[8][8]){
 	return 1;
 }
 
-int validarJogada(jogador, campos[8][8]){
+int validarJogada(int jogador, int campos[8][8]){
 	
-	
+	int aux = -1;
+
+	if(jogador == 0){
+		for(int i = 0; i < 8; i ++){
+			for(int j = 0; j < 8; j++){
 
 
-	return 1
+			}
+		}
+	}
+
+
+	return 1;
 }
 
 
 //Calcula e retorna um vetor com todas as possibilidades de jogadas possíveis para o jogador atual
-void jogadasValidas(jogador, campos[8][8]){
+void jogadasValidas(int jogador,int campos[8][8]){
 
+	//loop para verificar quais campos sao jogadas possiveis com base no campo e o jogador da vez
 	for(int i = 0; i < 8; i++){
 		for(int j = 0; j < 8; j++){
-			if(validarJogada(jogador, campos[i][j] == 0){
+			if(validarJogada(jogador, campos[i][j]) == 0){
 				campos[i][j] = 3;
 			}
 		}
@@ -123,13 +133,14 @@ void jogadasValidas(jogador, campos[8][8]){
 	return;
 }
 
-void limparJogadasValidas(campos[8][8]){
+void limparJogadasValidas(int campos[8][8]){
 	
+	//loop que passa pelo tabuleiro todo limpando quais sao os campos ocupados
 	for(int i = 0; i < 8; i++){
 		for(int j = 0; j < 8; j++){
 			if(campos[i][j] == 3){
 				campos[i][j] = 0;
-			}	
+			}
 		}
 	}
 
