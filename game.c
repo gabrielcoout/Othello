@@ -1,29 +1,32 @@
 #include <stdio.h>
+#include "aux.h"
 
 //Declaracao das funcoes
 void imprimirJogo(int campos[8][8]);
 void iniciarJogo(int campos[8][8]);
 int jogada(int *jogador, int campos[8][8]);
-int validarJogada(int jogador, int campos[8][8]);
-int jogadasValidas(int jogador, int campos[8][8]);
-void limparJogadasValidas(int campos[8][8]);
+int validarJogada(int jogador, int campos[8][8], int disks[][2]);
+// int jogadasValidas(int jogador, int campos[8][8]);
+// void limparJogadasValidas(int campos[8][8]);
 
 //funcoes de debug
-void debugJogo(int campos[8][8]);
+// void debugJogo(int campos[8][8]);
 
 int main(){
 
 	//declaracao de variaveis
 	int campos[8][8];
 	int jogador = 1;
+	int disks[64][2];
 
 	iniciarJogo(campos);
 
-	jogadasValidas(jogador, campos);
 	imprimirJogo(campos);
-	limparJogadasValidas(campos);
-	jogada(&jogador, campos);
-	imprimirJogo(campos);
+	// validarJogada(jogador, campos, disks);
+	// jogadasValidas(jogador, campos);
+	// imprimirJogo(campos);
+	// limparJogadasValidas(campos);
+	// jogada(&jogador, campos);
 
 	return 0;
 }
@@ -59,13 +62,10 @@ void iniciarJogo(int campos[8][8]){
 			campos[i][j] = 0;
 		}
 	}
-	
-	campos[3][3]=1;
+		campos[3][3]=1;
         campos[4][4]=1;
         campos[3][4]=2;
         campos[4][3]=2;
-
-
 	return;
 }
 
@@ -87,43 +87,69 @@ int jogada(int *jogador, int campos[8][8]){
 	return 1;
 }
 
-int validarJogada(int jogador, int campos[8][8]){
-	return 1;
+
+int set_disks(int jogador, int campos[8][8], int disks[][2]){
+    int temp = 0;
+    for (int i = 0; i < 8; i++){
+        for (int j = 0; j < 8; j++){
+            if (campos[i][j] == jogador){
+                disks[temp][0]=i;
+                disks[temp][1]=j;
+                temp++;
+            }
+        }
+    }
+    return temp;
 }
 
-
-//Calcula e retorna um vetor com todas as possibilidades de jogadas possíveis para o jogador atual
-int jogadasValidas(int jogador, int campos[8][8]){
-
-	for(int i = 0; i < 8; i++){
-		for(int j = 0; j < 8; j++){
-			if(validarJogada(jogador, campos[i][j]) == 0){
-				campos[i][j] = 3;
-			}
-		}
-	}
-	return 1;
-}
-
-void limparJogadasValidas(int campos[8][8]){
+// int caminho(int jogador, int campos[8][8], int disks[][2], int n_pecas){
+//     for (int i = 0; i < n_pecas; i++){
+		
+// 	}
 	
-	for(int i = 0; i < 8; i++){
-		for(int j = 0; j < 8; j++){
-			if(campos[i][j] == 3){
-				campos[i][j] = 0;
-			}	
-		}
-	}
-
-	return;
-}
+// }
 
 
-//Funcoes para debug
-void debugJogo(int campos[8][8]){
-	for (int i = 0; i < 8; i++){
-		for(int j = 0; j < 8; j++){
-			printf("%d", campos[i][j]);
-		}
-	}
-}
+// int validarJogada(int jogador, int campos[8][8], int disk[][2]){
+//     int n_pecas = set_disks(jogador, campos, disk);
+// 	print2Darray(disk, n, 2);
+//     return 1;
+// }
+
+
+
+// //Calcula e retorna um vetor com todas as possibilidades de jogadas possíveis para o jogador atual
+// int jogadasValidas(int jogador, int campos[8][8]){
+
+// 	for(int i = 0; i < 8; i++){
+// 		for(int j = 0; j < 8; j++){
+// 			if(validarJogada(jogador, campos[i][j]) == 0){
+// 				campos[i][j] = 3;
+// 			}
+// 		}
+// 	}
+// 	return 1;
+// }
+
+// void limparJogadasValidas(int campos[8][8]){
+	
+// 	for(int i = 0; i < 8; i++){
+// 		for(int j = 0; j < 8; j++){
+// 			if(campos[i][j] == 3){
+// 				campos[i][j] = 0;
+// 			}	
+// 		}
+// 	}
+
+// 	return;
+// }
+
+
+// //Funcoes para debug
+// void debugJogo(int campos[8][8]){
+// 	for (int i = 0; i < 8; i++){
+// 		for(int j = 0; j < 8; j++){
+// 			printf("%d", campos[i][j]);
+// 		}
+// 	}
+// }
