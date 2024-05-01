@@ -145,7 +145,7 @@ void jogadasValidas(int jogador, int campos[64]){
 void listarJogadas(int campos[64]){
     for (int i = 0; i < 64; i++){
         if (campos[i]==3){
-            printf("(%d) ", i);
+            printf("(%d,%d) ", i/8 + 1, i%8 + 1);
         }
     }
     printf("\n");
