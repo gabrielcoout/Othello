@@ -1,265 +1,177 @@
 #include <stdio.h>
 
-//Declaracao das funcoes
+// Declaração das funções
 void imprimirJogo(int campos[8][8]);
 void iniciarJogo(int campos[8][8]);
-int jogada(int jogador, int campos[8][8]);
+void jogada(int *jogador, int campos[8][8]);
 int validarJogada(int jogador, int linha, int coluna, int campos[8][8]);
 int jogadasValidas(int jogador, int campos[8][8]);
 void limparJogadasValidas(int campos[8][8]);
 void gameLoop();
 int fimDeJogo(int campos[8][8]);
 
-//funcoes de debug
 void debugJogo(int campos[8][8]);
 
+// Função principal
 int main() {
-
-	//declaracao de variaveis
-	//int campos[8][8];
-	//int jogador = 1;
-
-	//iniciarJogo(campos);
-	//jogadasValidas(jogador, campos);
-	//imprimirJogo(campos);
-	//limparJogadasValidas(campos);
-	//jogada(jogador, campos);
-	//imprimirJogo(campos);
-
-	gameLoop();
-
-	//
-
-	return 0;
+    gameLoop();
+    return 0;
 }
 
-
-//Mostra na tela o tabuleiro do jogo com X e O para as respectivas jogadas de cada jogador
+// Mostra o tabuleiro do jogo com X e O para as respectivas jogadas de cada jogador
 void imprimirJogo(int campos[8][8]) {
-	int i, j;
-	printf("---------------------------------\n");
-	
-	for (i = 0; i < 8; i++) {
-		printf("|");
-		for (j = 0; j < 8; j++) {
-
-			switch (campos[i][j]){
-				case 1:
-					printf(" x ");
-					break;
-				case 2:
-					printf(" o ");
-					break;
-				case 3:
-					printf("( )");
-					break;
-				default:
-					printf("   ");
-					break;
-			}
-
-			printf("|");
-		}
-		printf("\n---------------------------------\n");
-	}
-	return;
+    printf("---------------------------------\n");
+    for (int i = 0; i < 8; i++) {
+        printf("|");
+        for (int j = 0; j < 8; j++) {
+            switch (campos[i][j]){
+                case 1:
+                    printf(" X ");
+                    break;
+                case 2:
+                    printf(" O ");
+                    break;
+                case 3:
+                    printf("( )");
+                    break;
+                default:
+                    printf("   ");
+                    break;
+            }
+            printf("|");
+        }
+        printf("\n---------------------------------\n");
+    }
 }
 
-//Inicia o tabuleiro do jogo deixando somente com as pecas iniciais
+// Inicia o tabuleiro do jogo com as peças iniciais
 void iniciarJogo(int campos[8][8]){
-	for (int i = 0; i < 8; i++) {
-		for (int j = 0; j < 8; j++) {
-			campos[i][j] = 0;
-		}
-	}
-	
-	campos[3][3]=1;
-    campos[4][4]=1;
-	campos[3][4]=2;
-	campos[4][3]=2;
+    for (int i = 0; i < 8; i++)
+        for (int j = 0; j < 8; j++)
+            campos[i][j] = 0;
 
-
-	return;
+    campos[3][3] = 1;
+    campos[4][4] = 1;
+    campos[3][4] = 2;
+    campos[4][3] = 2;
 }
 
-//Preenche o vetor do jogo de forma que a jogada é gravada
-int jogada(int jogador, int campos[8][8]){
+// Realiza a jogada no tabuleiro
+void jogada(int *jogador, int campos[8][8]) {
+    int linha, coluna;
+    printf("Digite linha e coluna para jogar: ");
+    scanf("%d %d", &linha, &coluna);
 
-	int linha;
-	int coluna;
-
-	scanf("%d %d", &linha, &coluna);
-
-	if(jogador == 1){
-		campos[linha - 1][coluna - 1] = 1;
-		jogador = 2;
-		return 0;
-	}
-	if (jogador == 2){
-		campos[linha - 1][coluna - 1] = 2;
-		jogador = 1;
-		return 0;
-	}
-
-	return 1;
+    if (validarJogada(*jogador, linha - 1, coluna - 1, campos) == 0) {
+        campos[linha - 1][coluna - 1] = *jogador;
+        *jogador = (*jogador == 1) ? 2 : 1; // Troca de jogador
+    } else {
+        printf("Jogada inválida, tente novamente.\n");
+    }
 }
 
-int validarJogada(int jogador, int linha, int coluna, int campos[8][8]){
-	// Verificar se a posição está dentro dos limites do tabuleiro
-	if (linha < 0 || linha >= 8 || coluna < 0 || coluna >= 8) {
-		return 1; // Jogada inválida
-	}
-	
-	// Verificar se a posição já está ocupada
-	if (campos[linha][coluna] != 0) {
-		return 1; // Jogada inválida
-	}
-	
-	// Verificar se a jogada é válida em alguma direção
-	int direcoes[8][2] = {
-		{-1, -1}, {-1, 0}, {-1, 1},
-		{0, -1},           {0, 1},
-		{1, -1},  {1, 0},  {1, 1}
-	};
-	
-	for (int i = 0; i < 8; i++) {
-		int dx = direcoes[i][0];
-		int dy = direcoes[i][1];
-		
-		int x = linha + dx;
-		int y = coluna + dy;
-		
-		// Verificar se a próxima posição está dentro dos limites do tabuleiro
-		if (x >= 0 && x < 8 && y >= 0 && y < 8) {
-			// Verificar se a próxima posição é ocupada pelo jogador adversário
-			if (campos[x][y] == (jogador == 1 ? 2 : 1)) {
-				// Continuar na mesma direção até encontrar uma posição vazia ou uma posição ocupada pelo jogador atual
-				while (x >= 0 && x < 8 && y >= 0 && y < 8) {
-					if (campos[x][y] == jogador) {
-						return 0; // Jogada válida
-					}
-					if (campos[x][y] == 0) {
-						break; // Jogada inválida
-					}
-					x += dx;
-					y += dy;
-				}
-			}
-		}
-	}
-	
-	return 1; // Jogada inválida
+// Verifica se a jogada é válida
+int validarJogada(int jogador, int linha, int coluna, int campos[8][8]) {
+    if (linha < 0 || linha >= 8 || coluna < 0 || coluna >= 8 || campos[linha][coluna] != 0)
+        return 1; // Jogada inválida
+
+    int direcoes[8][2] = {
+        {-1, -1}, {-1, 0}, {-1, 1},
+        {0, -1},           {0, 1},
+        {1, -1},  {1, 0},  {1, 1}
+    };
+    
+    for (int i = 0; i < 8; i++) {
+        int dx = direcoes[i][0];
+        int dy = direcoes[i][1];
+        int x = linha + dx;
+        int y = coluna + dy;
+
+        // Primeira verificação: deve haver uma peça adversária adjacente na direção
+        if (x >= 0 && x < 8 && y >= 0 && y < 8 && campos[x][y] == (jogador == 1 ? 2 : 1)) {
+            // Segunda verificação: deve haver uma peça do próprio jogador em linha
+            x += dx;
+            y += dy;
+            while (x >= 0 && x < 8 && y >= 0 && y < 8) {
+                if (campos[x][y] == jogador) {
+                    return 0; // Jogada válida
+                }
+                if (campos[x][y] == 0) {
+                    break; // Chegou a uma casa vazia antes de fechar o "sanduíche"
+                }
+                x += dx;
+                y += dy;
+            }
+        }
+    }
+    return 1; // Jogada inválida
 }
 
-//Calcula e retorna um vetor com todas as possibilidades de jogadas possíveis para o jogador atual
-int jogadasValidas(int jogador,int campos[8][8]){
-
-	int validador = 0;
-
-	//loop para verificar quais campos sao jogadas possiveis com base no campo e o jogador da vez
-	for(int i = 0; i < 8; i++){
-		for(int j = 0; j < 8; j++){
-			if(validarJogada(jogador, i, j, campos) == 0){
-				campos[i][j] = 3;
-				validador = 1;
-			}
-		}
-	}
-
-	if(validador != 0){
-		return 1;
-	}
-
-	return 0;
+// Calcula e marca jogadas válidas no tabuleiro
+int jogadasValidas(int jogador, int campos[8][8]) {
+    int validador = 0;
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            if (validarJogada(jogador, i, j, campos) == 0) {
+                campos[i][j] = 3; // Marca como jogada válida temporária
+                validador = 1;
+            }
+        }
+    }
+    return validador;
 }
 
-void limparJogadasValidas(int campos[8][8]){
-	
-	//loop que passa pelo tabuleiro todo limpando quais sao os campos ocupados
-	for(int i = 0; i < 8; i++){
-		for(int j = 0; j < 8; j++){
-			if(campos[i][j] == 3){
-				campos[i][j] = 0;
-			}
-		}
-	}
-
-	return;
+// Limpa as jogadas válidas temporárias do tabuleiro
+void limparJogadasValidas(int campos[8][8]) {
+    for (int i = 0; i < 8; i++)
+        for (int j = 0; j < 8; j++)
+            if (campos[i][j] == 3)
+                campos[i][j] = 0;
 }
 
-//game loop
-void gameLoop(){
-	int campos[8][8];
-	int jogador = 1;
-	//int jogadas = 0;
-	int vencedor = 0;
+// Loop principal do jogo
+void gameLoop() {
+    int campos[8][8], jogador = 1;
+    iniciarJogo(campos);
 
-	while(vencedor == 0){
+    while (1) {
+		jogadasValidas(jogador, campos);
+        imprimirJogo(campos);
+        if (!jogadasValidas(jogador, campos)) {
+            printf("Jogador %d não tem jogadas válidas.\n", jogador);
+            jogador = (jogador == 1) ? 2 : 1;
+            if (!jogadasValidas(jogador, campos)) {
+                printf("Jogo acabou.\n");
+                break;
+            }
+        }
+        jogada(&jogador, campos);
+        limparJogadasValidas(campos);
+    }
 
-		//verifica se o jogo acabou
-		if(jogadasValidas(jogador, campos) == 1 ){
-			printf("Jogador %d nao tem jogadas validas\n", jogador);
-
-			//troca de jogador
-
-			if(jogador == 1){
-				jogador = 2;
-			}else{
-				jogador = 1;
-			}
-
-			//verifica se o outro jogador tambem nao tem jogadas validas
-
-			if(jogadasValidas(jogador, campos) == 1){
-				printf("Jogo acabou\n");
-				vencedor = fimDeJogo(campos);
-				break;
-			}
-
-		}else{
-			printf("Jogador %d tem jogadas validas\n", jogador);
-			printf("Digite a linha e a coluna da jogada do jogador %d \n", jogador);
-			debugJogo(campos);
-			imprimirJogo(campos);
-			jogada(jogador, campos);
-			limparJogadasValidas(campos);
-		}
-
-
-		//jogadas++;
-	}
+    fimDeJogo(campos);
 }
 
-int fimDeJogo(int campos[8][8]){
-	int pecasJogador1 = 0;
-	int pecasJogador2 = 0;
+// Determina o resultado final do jogo
+int fimDeJogo(int campos[8][8]) {
+    int pecasJogador1 = 0, pecasJogador2 = 0;
+    for (int i = 0; i < 8; i++)
+        for (int j = 0; j < 8; j++)
+            if (campos[i][j] == 1)
+                pecasJogador1++;
+            else if (campos[i][j] == 2)
+                pecasJogador2++;
 
-	for(int i = 0; i < 8; i++){
-		for(int j = 0; j < 8; j++){
-			if(campos[i][j] == 1){
-				pecasJogador1++;
-			}
-			if(campos[i][j] == 2){
-				pecasJogador2++;
-			}
-		}
-	}
+    if (pecasJogador1 > pecasJogador2)
+        printf("Jogador 1 venceu!\n");
+    else if (pecasJogador2 > pecasJogador1)
+        printf("Jogador 2 venceu!\n");
+    else
+        printf("Empate.\n");
 
-	if(pecasJogador1 > pecasJogador2){
-		printf("Jogador 1 venceu\n");
-		return 1;
-	}
-	if(pecasJogador2 > pecasJogador1){
-		printf("Jogador 2 venceu\n");
-		return 2;
-	}
-	if(pecasJogador1 == pecasJogador2){
-		printf("Empate\n");
-		return 3;
-	}
-
-	return 0;
+    return 0;
 }
+
 
 //Funcoes para debug
 void debugJogo(int campos[8][8]){
