@@ -59,16 +59,22 @@ void iniciarJogo(int campos[8][8]){
 // Realiza a jogada no tabuleiro
 void jogada(int *jogador, int campos[8][8]) {
     int linha, coluna;
-    printf("Digite linha e coluna para jogar: ");
-    scanf("%d %d", &linha, &coluna);
+	while (1)
+	{
+		printf("Digite linha e coluna para jogar: ");
+		scanf("%d %d", &linha, &coluna);
 
-    if (validarJogada(*jogador, linha - 1, coluna - 1, campos) == 0) {
-        campos[linha - 1][coluna - 1] = *jogador;
-        *jogador = (*jogador == 1) ? 2 : 1; // Troca de jogador
-    } else {
-        printf("Jogada inválida, tente novamente.\n");
-    }
-}
+		if (campos[linha - 1][coluna - 1] == 3) {
+			campos[linha - 1][coluna - 1] = *jogador;
+			*jogador = (*jogador == 1) ? 2 : 1; // Troca de jogador
+			break;
+		} else {
+			printf("Jogada inválida, tente novamente.\n");
+		}
+	}
+	
+		
+	}
 
 // Verifica se a jogada é válida
 int validarJogada(int jogador, int linha, int coluna, int campos[8][8]) {
