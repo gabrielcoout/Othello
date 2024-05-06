@@ -131,8 +131,9 @@ int jogadasValidas(int jogador, int campos[8][8]) {
 void limparJogadasValidas(int campos[8][8]) {
     for (int i = 0; i < 8; i++)
         for (int j = 0; j < 8; j++)
-            if (campos[i][j] == 3)
+            if (campos[i][j] == 3){
                 campos[i][j] = 0;
+	    }
 }
 
 // Loop principal do jogo
@@ -141,16 +142,22 @@ void gameLoop() {
     iniciarJogo(campos);
 
     while (1) {
-		jogadasValidas(jogador, campos);
-        imprimirJogo(campos);
-        if (!jogadasValidas(jogador, campos)) {
-            printf("Jogador %d não tem jogadas válidas.\n", jogador);
-            jogador = (jogador == 1) ? 2 : 1;
-            if (!jogadasValidas(jogador, campos)) {
-                printf("Jogo acabou.\n");
-                break;
-            }
-        }
+        if (!jogadasValidas(jogador, campos)) {  //Uma vez que essa funcao eh usada como flag e como alteracao de campos
+						//temos que limpar as jogadas validas depois de usar ela
+
+		printf("Jogador %d não tem jogadas válidas.\n", jogador);
+		limparJogadasValidas(campos);
+		jogador = (jogador == 1) ? 2 : 1;
+
+		if (!jogadasValidas(jogador, campos)) {
+			limparJogadasValidas(campos); //talvez desnecessario, verificar
+			printf("Jogo acabou.\n");
+			break;
+		}
+	}
+	limparJogadasValidas(campos);
+	jogadasValidas(jogador, campos);
+	imprimirJogo(campos);
         jogada(&jogador, campos);
         limparJogadasValidas(campos);
     }
@@ -181,9 +188,11 @@ int fimDeJogo(int campos[8][8]) {
 
 //Funcoes para debug
 void debugJogo(int campos[8][8]){
+	printf("\n");
 	for (int i = 0; i < 8; i++){
 		for(int j = 0; j < 8; j++){
 			printf("%d", campos[i][j]);
 		}
 	}
+	printf("\n");
 }
