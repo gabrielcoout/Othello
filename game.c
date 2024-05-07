@@ -59,22 +59,21 @@ void iniciarJogo(int campos[8][8]){
 // Realiza a jogada no tabuleiro
 void jogada(int *jogador, int campos[8][8]) {
     int linha, coluna;
-	while (1)
-	{
-		printf("Digite linha e coluna para jogar: ");
-		scanf("%d %d", &linha, &coluna);
+    while (1) {
+        printf("Digite linha e coluna para jogar: ");
+        scanf("%d %d", &linha, &coluna);
 
-		if (campos[linha - 1][coluna - 1] == 3) {
-			campos[linha - 1][coluna - 1] = *jogador;
-			*jogador = (*jogador == 1) ? 2 : 1; // Troca de jogador
-			break;
-		} else {
-			printf("Jogada inválida, tente novamente.\n");
-		}
-	}
-	
-		
-	}
+        if (campos[linha - 1][coluna - 1] == 3) {
+            campos[linha - 1][coluna - 1] = *jogador;
+            comerPecas(*jogador, linha - 1, coluna - 1, campos);    // Chama a função para comer as peças
+            *jogador = (*jogador == 1) ? 2 : 1;                     // Troca de jogador após a jogada usando operador ternário
+            break;
+        } else {
+            printf("Jogada inválida, tente novamente.\n");
+        }
+    }
+}
+
 
 // Verifica se a jogada é válida
 int validarJogada(int jogador, int linha, int coluna, int campos[8][8]) {
@@ -184,6 +183,50 @@ int fimDeJogo(int campos[8][8]) {
 
     return 0;
 }
+
+//Funcao para comer as pecas do adversario
+void comerPecas(int jogadorAtual, int posicaoLinha, int posicaoColuna, int tabuleiro[8][8]) {
+    int direcoes[8][2] = {
+        {-1, -1}, {-1, 0}, {-1, 1},
+        { 0, -1},          { 0, 1},
+        { 1, -1}, { 1, 0}, { 1, 1}
+    };
+
+    int adversario;
+    if (jogadorAtual == 1) {
+        adversario = 2;
+    } else {
+        adversario = 1;
+    }
+
+    for (int i = 0; i < 8; i++) {
+        int incrementoLinha = direcoes[i][0];
+        int incrementoColuna = direcoes[i][1];
+        int linhaAtual = posicaoLinha + incrementoLinha;
+        int colunaAtual = posicaoColuna + incrementoColuna;
+        int contadorPecas = 0;
+
+        while (linhaAtual >= 0 && linhaAtual < 8 && colunaAtual >= 0 && colunaAtual < 8) {
+            if (tabuleiro[linhaAtual][colunaAtual] == adversario) {
+                contadorPecas++;
+                linhaAtual += incrementoLinha;
+                colunaAtual += incrementoColuna;
+            } else if (tabuleiro[linhaAtual][colunaAtual] == jogadorAtual) {
+                while (contadorPecas > 0) {
+                    linhaAtual -= incrementoLinha;
+                    colunaAtual -= incrementoColuna;
+                    tabuleiro[linhaAtual][colunaAtual] = jogadorAtual;
+                    contadorPecas--;
+                }
+                break;
+            } else {
+                break;
+            }
+        }
+    }
+}
+
+
 
 
 //Funcoes para debug
