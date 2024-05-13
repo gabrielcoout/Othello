@@ -102,7 +102,7 @@ int validarJogada(int jogador, int linha, int coluna, int campos[8][8]) {
                 if (campos[x][y] == jogador) {
                     return 0; // Jogada válida
                 }
-                if (campos[x][y] == 0) {
+                if (campos[x][y] == 0 || campos[x][y] == 3) {
                     break; // Chegou a uma casa vazia antes de fechar o "sanduíche"
                 }
                 x += dx;
@@ -142,9 +142,8 @@ void gameLoop() {
     iniciarJogo(campos);
 
     while (1) {
-        if (!jogadasValidas(jogador, campos)) {  //Uma vez que essa funcao eh usada como flag e como alteracao de campos
-						//temos que limpar as jogadas validas depois de usar ela
-
+        if (!jogadasValidas(jogador, campos)) { //Uma vez que essa funcao eh usada como flag e como alteracao de campos
+						                        //temos que limpar as jogadas validas depois de usar ela
 		printf("Jogador %d não tem jogadas válidas.\n", jogador);
 		limparJogadasValidas(campos);
 		jogador = (jogador == 1) ? 2 : 1;
@@ -228,15 +227,14 @@ void comerPecas(int jogadorAtual, int posicaoLinha, int posicaoColuna, int tabul
 }
 
 
-
-
 //Funcoes para debug
 void debugJogo(int campos[8][8]){
 	printf("\n");
 	for (int i = 0; i < 8; i++){
 		for(int j = 0; j < 8; j++){
-			printf("%d", campos[i][j]);
+			printf("%d ", campos[i][j]);
 		}
+        printf("\n");
 	}
 	printf("\n");
 }
