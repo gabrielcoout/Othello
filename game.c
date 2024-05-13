@@ -9,6 +9,7 @@ int jogadasValidas(int jogador, int campos[8][8]);
 void limparJogadasValidas(int campos[8][8]);
 void gameLoop();
 int fimDeJogo(int campos[8][8]);
+void comerPecas(int jogadorAtual, int posicaoLinha, int posicaoColuna, int tabuleiro[8][8]);
 
 void debugJogo(int campos[8][8]);
 
