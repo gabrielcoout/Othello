@@ -1,3 +1,5 @@
+//Gabriel Coutinho Chaves 15111760
+//Gabriel Gomes Tavares 15111742
 #include <stdio.h>
 
 // Declaracao das funcoes
