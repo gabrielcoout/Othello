@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 // Declaracao das funcoes
-void imprimirJogo(int campos[8][8]);
+void imprimirJogo(int jogador, int campos[8][8]);
 void iniciarJogo(int campos[8][8]);
 void jogada(int *jogador, int campos[8][8]);
 int validarJogada(int jogador, int linha, int coluna, int campos[8][8]);
@@ -19,7 +19,8 @@ int main() {
 }
 
 // Mostra o tabuleiro do jogo com X e O para as respectivas jogadas de cada jogador (e as coordenadas nas jogadas validas)
-void imprimirJogo(int campos[8][8]) {
+void imprimirJogo(int jogador, int campos[8][8]) {
+    printf("Turno do jogador %d\n", jogador);
     printf("-----------------------------------------------------------------\n");
     for (int i = 0; i < 8; i++) {
         printf("|");
@@ -61,7 +62,6 @@ void iniciarJogo(int campos[8][8]){
 // Realiza a jogada no tabuleiro
 void jogada(int *jogador, int campos[8][8]) {
     int linha, coluna;
-
     do{
 
         printf("Digite linha e coluna para jogar: ");
@@ -167,8 +167,9 @@ void gameLoop() {
             jogadasValidas(jogador, campos);
     	}
 
-        imprimirJogo(campos);
+        imprimirJogo(jogador, campos);
         jogada(&jogador, campos);
+        printf("\n");
     }
 
     fimDeJogo(campos);
