@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-// Declaração das funções
+// Declaracao das funcoes
 void imprimirJogo(int campos[8][8]);
 void iniciarJogo(int campos[8][8]);
 void jogada(int *jogador, int campos[8][8]);
@@ -10,16 +10,15 @@ void limparJogadasValidas(int campos[8][8]);
 void gameLoop();
 int fimDeJogo(int campos[8][8]);
 void comerPecas(int jogadorAtual, int posicaoLinha, int posicaoColuna, int tabuleiro[8][8]);
-
 void debugJogo(int campos[8][8]);
 
-// Função principal
+// Funcao principal
 int main() {
     gameLoop();
     return 0;
 }
 
-// Mostra o tabuleiro do jogo com X e O para as respectivas jogadas de cada jogador
+// Mostra o tabuleiro do jogo com X e O para as respectivas jogadas de cada jogador (e as coordenadas nas jogadas validas)
 void imprimirJogo(int campos[8][8]) {
     printf("-----------------------------------------------------------------\n");
     for (int i = 0; i < 8; i++) {
@@ -84,7 +83,7 @@ void jogada(int *jogador, int campos[8][8]) {
 // Verifica se a jogada eh valida
 // Ela retorna 0 se a jogada for valida e 1 se for invalida.
 int validarJogada(int jogador, int linha, int coluna, int campos[8][8]) {
-    // Verifica se as coordenadas estão fora dos limites do tabuleiro ou se a casa ja esta ocupada.
+    // Verifica se as coordenadas estao fora dos limites do tabuleiro ou se a casa ja esta ocupada.
     if (linha < 0 || linha >= 8 || coluna < 0 || coluna >= 8 || campos[linha][coluna] != 0)
         return 1; // Retorna 1, indicando jogada invalida
 
@@ -108,20 +107,20 @@ int validarJogada(int jogador, int linha, int coluna, int campos[8][8]) {
             x += dx;
             y += dy;
             while (x >= 0 && x < 8 && y >= 0 && y < 8) {
-                // Se encontrar uma peça do proprio jogador, retorna 0 indicando que a jogada eh valida.
+                // Se encontrar uma peca do proprio jogador, retorna 0 indicando que a jogada eh valida.
                 if (campos[x][y] == jogador) {
                     return 0; // Jogada válida
                 }
-                // Se encontrar uma casa vazia ou uma casa com outra marcação especifica, interrompe a busca nesta direção.
+                // Se encontrar uma casa vazia ou uma casa com outra marcacao especifica, interrompe a busca nesta direcao.
                 if (campos[x][y] == 0 || campos[x][y] == 3) {
-                    break; // Encerra a verificação nesta direção, pois não esta entre duas pecas".
+                    break; // Encerra a verificacao nesta direcao, pois não esta entre duas pecas".
                 }
                 x += dx;
                 y += dy;
             }
         }
     }
-    return 1; // Se nenhuma condição valida foi encontrada em todas as direcoes, retorna 1 indicando jogada invalida.
+    return 1; // Se nenhuma condicao valida foi encontrada em todas as direcoes, retorna 1 indicando jogada invalida.
 }
 
 
@@ -207,17 +206,17 @@ int fimDeJogo(int campos[8][8]) {
 // Funcao para comer as pecas do adversario
 // Ela atualiza o tabuleiro depois que uma peca eh jogada em uma determinada posicao.
 void comerPecas(int jogadorAtual, int posicaoLinha, int posicaoColuna, int tabuleiro[8][8]) {
-    // Define as oito possíveis direções de movimento no tabuleiro (diagonais, horizontais e verticais)
+    // Define as oito possiveis direcoes de movimento no tabuleiro (diagonais, horizontais e verticais)
     int direcoes[8][2] = {
         {-1, -1}, {-1, 0}, {-1, 1},
         { 0, -1},          { 0, 1},
         { 1, -1}, { 1, 0}, { 1, 1}
     };
 
-    // Determina o número do adversário com base no jogador atual
+    // Determina o numero do adversario com base no jogador atual
     int adversario = jogadorAtual == 1 ? 2 : 1;
 
-    // Itera sobre todas as direções possíveis para verificar se há peças do adversário para capturar
+    // Itera sobre todas as direcoes possiveis para verificar se ha pecas do adversario para capturar
     for (int i = 0; i < 8; i++) {
         int incrementoLinha = direcoes[i][0];
         int incrementoColuna = direcoes[i][1];
@@ -232,7 +231,7 @@ void comerPecas(int jogadorAtual, int posicaoLinha, int posicaoColuna, int tabul
                 linhaAtual += incrementoLinha;
                 colunaAtual += incrementoColuna;
             } else if (tabuleiro[linhaAtual][colunaAtual] == jogadorAtual && contadorPecas > 0) {
-                // Se encontrar uma peca do jogador apos uma sequência de pecas do adversario, retrocede e converte todas as pecas do adversario
+                // Se encontrar uma peca do jogador apos uma sequencia de pecas do adversario, retrocede e converte todas as pecas do adversario
                 while (contadorPecas > 0) {
                     linhaAtual -= incrementoLinha;
                     colunaAtual -= incrementoColuna;
