@@ -62,19 +62,21 @@ void iniciarJogo(int campos[8][8]){
 // Realiza a jogada no tabuleiro
 void jogada(int *jogador, int campos[8][8]) {
     int linha, coluna;
-    while (1) {
+
+    do{
+
         printf("Digite linha e coluna para jogar: ");
         scanf("%d %d", &linha, &coluna);
 
-        if (campos[linha - 1][coluna - 1] == 3) {
-            campos[linha - 1][coluna - 1] = *jogador;
-            comerPecas(*jogador, linha - 1, coluna - 1, campos);    // Chama a função para comer as peças
-            *jogador = (*jogador == 1) ? 2 : 1;                     // Troca de jogador após a jogada usando operador ternário
-            break;
-        } else {
+        if(campos[linha - 1] [coluna - 1] != 3){
             printf("Jogada inválida, tente novamente.\n");
         }
-    }
+
+    }while(campos[linha - 1][coluna - 1] != 3);
+
+    campos[linha - 1][coluna - 1] = *jogador;
+    comerPecas(*jogador, linha - 1, coluna - 1, campos);    // Chama a funcao para comer as pecas
+    *jogador = (*jogador == 1) ? 2 : 1;                     // Troca de jogador apos a jogada usando operador ternario
 
     return;
 }
