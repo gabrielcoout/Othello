@@ -7,13 +7,24 @@ int valorTabuleiro(int tabuleiro[8][8], int jogadorAtual){
     int adversario = jogadorAtual == 1 ? 2 : 1;
     float valor;
 
+    float valoresTabuleiro[8][8] = {
+        1.5, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.5,
+        1.2, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.2,
+        1.2, 1.0, 1.1, 1.1, 1.1, 1.1, 1.0, 1.2,
+        1.2, 1.0, 1.1, 1.0, 1.0, 1.1, 1.0, 1.2,
+        1.2, 1.0, 1.1, 1.0, 1.0, 1.1, 1.0, 1.2,
+        1.2, 1.0, 1.1, 1.1, 1.1, 1.1, 1.0, 1.2,
+        1.2, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.2,
+        1.5, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.5,
+    }
+
     for(int i = 0; i < 8; i++){
         for(int j = 0; j < 8; j++){
             if(tabuleiro[i][j] == jogadorAtual){
-                valor++;
+                valor += valoresTabuleiro[i][j];
             }
             if(tabuleiro[i][j] == adversario){
-                valor--;
+                valor -= valoresTabuleiro[i][j];
             }
         } // Mais pra frente vou evaluar as melhores posicoes no tabuleiro e vai ser += ou -= valorPos
     }
