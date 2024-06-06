@@ -17,7 +17,7 @@ int valorTabuleiro(int tabuleiro[8][8], int jogadorAtual){
         1.2, 1.0, 1.1, 1.1, 1.1, 1.1, 1.0, 1.2,
         1.2, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.2,
         1.5, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.5,
-    }
+    };
 
     for(int i = 0; i < 8; i++){
         for(int j = 0; j < 8; j++){
@@ -45,7 +45,7 @@ void copiarTabuleiro(int tabuleiroOriginal[8][8], int tabuleiroCopia){// void pa
     return tabuleiroCopia;
 }
 
-int miniMax(int tabuleiro[8][8], int profundidade, int jogador, int chamaMax){
+float miniMax(int tabuleiro[8][8], int profundidade, int jogador, int chamaMax){
     int valorMaximador =  -100000;
     int valorMinimizador = 100000;
     int camposCopia[8][8];
@@ -57,6 +57,17 @@ int miniMax(int tabuleiro[8][8], int profundidade, int jogador, int chamaMax){
         return valorTabuleiro(tabuleiro);
     }
 
+    //verificar se o jogo acabou
+    /*{
+        codigo aq
+        e retornar o valor tabuleiro
+    }*/
+
+    /*
+    
+    lembrar de verificar se o jogador tem vez ou passa pro prox
+
+    */
     camposCopia = copiarTabuleiro(tabuleiro);
     limparJogadasValidas(jogador, camposCopia);
     jogadasValidas(camposCopia);
