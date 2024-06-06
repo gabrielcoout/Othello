@@ -1,6 +1,7 @@
 //Gabriel Coutinho Chaves 15111760
 //Gabriel Gomes Tavares 15111742
 #include <stdio.h>
+#include "computador.c"
 
 // Declaracao das funcoes
 void imprimirJogo(int jogador, int campos[8][8]);
