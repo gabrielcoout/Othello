@@ -1,12 +1,13 @@
 #include "computador.h"
 #include "game.c"
 
-//Calcula e devolve o valor do tabuleiro com base no jogador atual
+// Calcula e devolve o valor do tabuleiro com base no jogador atual
 int valorTabuleiro(int tabuleiro[8][8], int jogadorAtual){
 
     int adversario = jogadorAtual == 1 ? 2 : 1;
     float valor;
 
+    // valores de cada casa em realcao a posicao no tabuleiro
     float valoresTabuleiro[8][8] = {
         1.5, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.5,
         1.2, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.2,
@@ -26,7 +27,7 @@ int valorTabuleiro(int tabuleiro[8][8], int jogadorAtual){
             if(tabuleiro[i][j] == adversario){
                 valor -= valoresTabuleiro[i][j];
             }
-        } // Mais pra frente vou evaluar as melhores posicoes no tabuleiro e vai ser += ou -= valorPos
+        }
     }
 
     return valor;
@@ -34,6 +35,7 @@ int valorTabuleiro(int tabuleiro[8][8], int jogadorAtual){
 
 void copiarTabuleiro(int tabuleiroOriginal[8][8], int tabuleiroCopia){// void passar os dois //2 for
     
+    //Loop para copiar os valores
     for(int i = 0; i < 8; i++){
         for(int j = 0; j < 8; j++){
             tabuleiroCopia[i][j] = tabuleiroOriginal[i][j];
@@ -50,6 +52,7 @@ int miniMax(int tabuleiro[8][8], int profundidade, int jogador, int chamaMax){
     int pontuacao;
     int adversario = jogador == 1 ? 2 : 1;
 
+    //Ponto de parada do miniMax
     if(profundidade == 0){
         return valorTabuleiro(tabuleiro);
     }
@@ -67,17 +70,21 @@ int miniMax(int tabuleiro[8][8], int profundidade, int jogador, int chamaMax){
                 if(chamaMax){
                     if(pontuacao > valorMaximizador){
                         valorMaximizador = pontuacao;
-                        return valorMinimizador;
                     }
                 }else{
                     if(pontuacao < valorMinimizador){
                         valorMinimizador = pontuacao;
-                        return valorMinimizador;
                     }
                 }
             }
             
         }
+    }
+
+    if(chamaMax){
+        return valorMaximizador;
+    }else{
+        return valorMinimizador;
     }
 
 }
