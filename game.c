@@ -19,6 +19,7 @@ int valorTabuleiro(int tabuleiro[8][8], int jogadorAtual);
 void copiarTabuleiro(int tabuleiroOriginal[8][8], int tabuleiroCopia[8][8]);
 float miniMax(int tabuleiro[8][8], int profundidade, int jogador, int chamaMax);
 void gameLoopBot();
+int verificarFimDeJogo(int tabuleiro[8][8], int jogador);
 
 // Funcao principal
 int main() {
@@ -30,6 +31,7 @@ int main() {
     //Escolha do modo de jogo
     while(escolha != 3){
 
+        printf("1 - PvP\n2 - PvE\n");
         scanf("%d", &escolha);
 
         switch (escolha){
@@ -350,12 +352,13 @@ float miniMax(int tabuleiro[8][8], int profundidade, int jogador, int chamaMax){
     int adversario = jogador == 1 ? 2 : 1;
     int flagTemJogada = 0;
 
+    limparJogadasValidas(tabuleiro);
+
     //Ponto de parada do miniMax
-    if(profundidade == 0 || fimDeJogo(tabuleiro)){
+    if(profundidade == 0 || verificarFimDeJogo(tabuleiro, jogador)){
         return valorTabuleiro(tabuleiro, jogador);
     }
 
-    limparJogadasValidas(tabuleiro);
     jogadasValidas(jogador, tabuleiro);
 
     for(int i = 0; i < 8; i++){
@@ -445,11 +448,22 @@ void gameLoopBot(){
             comerPecas(jogador, melhorI, melhorJ, campos);    // Chama a funcao para comer as pecas
             jogador = (jogador == 1) ? 2 : 1;
 
-            printf("O Bot jogou %d,%d", melhorI, melhorJ);
+            printf("O Bot jogou %d,%d\n", melhorI, melhorJ);
         }
 
     }
 
     fimDeJogo(campos);
 
+}
+
+int verificarFimDeJogo(int tabuleiro[8][8], int jogador){
+
+    if(!jogadasValidas(jogador, tabuleiro) && !jogadasValidas(3 - jogador, tabuleiro)){
+        return 0; // Nao tem jogadas validas
+    }
+
+    limparJogadasValidas(tabuleiro);
+
+    return 1; // Tem jogadas validas
 }
