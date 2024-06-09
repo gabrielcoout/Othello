@@ -333,16 +333,16 @@ float miniMax(int tabuleiro[8][8], int profundidade, int jogador, int chamaMax){
         return valorTabuleiro(tabuleiro);
     }
 
-    camposCopia = copiarTabuleiro(tabuleiro);
-    limparJogadasValidas(jogador, camposCopia);
-    jogadasValidas(camposCopia);
+    limparJogadasValidas(jogador, tabuleiro);
+    jogadasValidas(tabuleiro);
     
 
     for(int i = 0; i < 8; i++){
         for(int j = 0;j < 8; j++){
             if(camposCopia[i][j] == 3){
-                flagJogada = 1;
-                comerPecas(int jogador, i, j, camposcopia);
+                flagTemJogada = 1;                                  // Altera a flag para que nao caia no caso que nao tem jogadas validas
+                camposCopia = copiarTabuleiro(tabuleiro);           // Copia o campo somente aqui para nao atrapalhar nas outras jogadas possiveis
+                comerPecas(jogador, i, j, camposCopia);             // Faz a jogada nessa jogada valida
                 pontuacao = miniMax(copiaCampos, profundidade - 1, adversario, 1 - chamaMax);
                 if(chamaMax){
                     if(pontuacao > valorMaximizador){
