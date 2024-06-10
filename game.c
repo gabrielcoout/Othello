@@ -15,7 +15,7 @@ int fimDeJogo(int campos[8][8]);
 void comerPecas(int jogadorAtual, int posicaoLinha, int posicaoColuna, int tabuleiro[8][8]);
 void debugJogo(int campos[8][8]);
 
-int valorTabuleiro(int tabuleiro[8][8], int jogadorAtual);
+float valorTabuleiro(int tabuleiro[8][8], int jogadorAtual);
 void copiarTabuleiro(int tabuleiroOriginal[8][8], int tabuleiroCopia[8][8]);
 float miniMax(int tabuleiro[8][8], int profundidade, int jogador, int chamaMax);
 void gameLoopBot();
@@ -307,7 +307,7 @@ void debugJogo(int campos[8][8]){
 // Funcoes para jogada do Computador
 
 // Calcula e devolve o valor do tabuleiro com base no jogador atual
-int valorTabuleiro(int tabuleiro[8][8], int jogadorAtual){
+float valorTabuleiro(int tabuleiro[8][8], int jogadorAtual){
 
     int adversario = jogadorAtual == 1 ? 2 : 1;
     float valor = 0;
@@ -354,7 +354,7 @@ float miniMax(int tabuleiro[8][8], int profundidade, int jogador, int chamaMax){
     int valorMaximizador =  -100000;
     int valorMinimizador = 100000;
     int camposCopia[8][8];
-    int pontuacao;
+    float pontuacao;
     int adversario = jogador == 1 ? 2 : 1;
     int flagTemJogada = 0;
 
