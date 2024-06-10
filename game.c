@@ -310,7 +310,7 @@ void debugJogo(int campos[8][8]){
 int valorTabuleiro(int tabuleiro[8][8], int jogadorAtual){
 
     int adversario = jogadorAtual == 1 ? 2 : 1;
-    float valor;
+    float valor = 0;
 
     // valores de cada casa em realcao a posicao no tabuleiro
     float valoresTabuleiro[8][8] = {
@@ -358,12 +358,12 @@ float miniMax(int tabuleiro[8][8], int profundidade, int jogador, int chamaMax){
     int adversario = jogador == 1 ? 2 : 1;
     int flagTemJogada = 0;
 
-    copiarTabuleiro(tabuleiro, camposCopia);
-    limparJogadasValidas(camposCopia);
+    //copiarTabuleiro(tabuleiro, camposCopia);
+    //limparJogadasValidas(camposCopia);
 
     //Ponto de parada do miniMax
-    if(profundidade == 0 || verificarFimDeJogo(camposCopia, jogador)){
-        return valorTabuleiro(camposCopia, jogador);
+    if(profundidade == 0 || verificarFimDeJogo(tabuleiro, jogador)){ //VERIFICAR
+        return valorTabuleiro(tabuleiro, jogador);
     }
 
     jogadasValidas(jogador, tabuleiro);
@@ -425,6 +425,8 @@ void gameLoopBot() {
 
         if (!jogadasValidas(jogador, campos)) { // Verifica se o jogador tem jogadas validas e ja deixa marcada as posicoes com validas
 
+            limparJogadasValidas(campos);
+
             if(jogador == 1){
                 printf("O jogador nao tem jogadas validas.\n");
             }else{
@@ -433,6 +435,8 @@ void gameLoopBot() {
 
             jogador = 3 - jogador;
         }
+
+        jogadasValidas(jogador , campos);
 
         if (jogador == 1) {
             imprimirJogo(jogador, campos);
@@ -467,10 +471,6 @@ void gameLoopBot() {
                 printf("nao era pra ter caido aq");
             }
         }
-
-        if (!verificarFimDeJogo){
-            break;
-        }
         
     }
 
@@ -480,12 +480,12 @@ void gameLoopBot() {
 int verificarFimDeJogo(int tabuleiro[8][8], int jogador){
 
     if(!jogadasValidas(jogador, tabuleiro) && !jogadasValidas(3 - jogador, tabuleiro)){
-        return 0; // Nao tem jogadas validas
+        return 1; // Nao tem jogadas validas
     }
 
     limparJogadasValidas(tabuleiro);
 
-    return 1; // Tem jogadas validas
+    return 0; // Tem jogadas validas
 }
 
 void fimDeJogoBot(int tabuleiro[8][8]){
