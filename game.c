@@ -466,7 +466,7 @@ void gameLoopBot() {
                 limparJogadasValidas(campos);
 
                 printf("O Bot jogou %d,%d\n", melhorI + 1, melhorJ + 1);
-                printf("Vantagem do Bot na profundidade %d: %d\n", escolha, melhorJogada)
+                printf("Vantagem do Bot na profundidade %d: %d\n", escolha, melhorJogada);
             }
         }
         
