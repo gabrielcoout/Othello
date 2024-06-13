@@ -313,14 +313,14 @@ int valorTabuleiro(int tabuleiro[8][8]){
 
     // valores de cada casa em realcao a posicao no tabuleiro
     int valoresTabuleiro[8][8] = {
-        20, 15, 15, 15, 15, 15, 15, 20,
-        15, 10, 10, 10, 10, 10, 10, 15,
-        15, 10, 12, 12, 12, 12, 10, 15,
-        15, 10, 12, 12, 12, 12, 10, 15,
-        15, 10, 12, 12, 12, 12, 10, 15,
-        15, 10, 12, 12, 12, 12, 10, 15,
-        15, 10, 10, 10, 10, 10, 10, 15,
-        20, 15, 15, 15, 15, 15, 15, 20,
+        {20,  5, 15, 15, 15, 15, 5, 20},
+        { 5,  0, 10, 10, 10, 10, 0,  5},
+        {15, 10, 12, 12, 12, 12, 10, 15},
+        {15, 10, 12, 12, 12, 12, 10, 15},
+        {15, 10, 12, 12, 12, 12, 10, 15},
+        {15, 10, 12, 12, 12, 12, 10, 15},
+        {5,   0, 10, 10, 10, 10, 0,   5},
+        {20,  5, 15, 15, 15, 15, 5,  20}
     };
 
     for(int i = 0; i < 8; i++){
@@ -369,9 +369,10 @@ int miniMax(int tabuleiro[8][8], int profundidade, int jogador, int chamaMax){
 
     for(int i = 0; i < 8; i++){
         for(int j = 0;j < 8; j++){
+            copiarTabuleiro(tabuleiro, camposCopia);            // Copia o campo somente aqui para nao atrapalhar nas outras jogadas possiveis
             if(camposCopia[i][j] == 3){
                 flagTemJogada = 1;                                  // Altera a flag para que nao caia no caso que nao tem jogadas validas
-                copiarTabuleiro(tabuleiro, camposCopia);            // Copia o campo somente aqui para nao atrapalhar nas outras jogadas possiveis
+                camposCopia[i][j] = jogador;
                 comerPecas(jogador, i, j, camposCopia);             // Faz a jogada nessa jogada valida
                 pontuacao = miniMax(camposCopia, profundidade - 1, adversario, 1 - chamaMax);
                 if(chamaMax){
@@ -389,7 +390,7 @@ int miniMax(int tabuleiro[8][8], int profundidade, int jogador, int chamaMax){
     }
 
     if (!flagTemJogada) { // Trata o caso do jogador atual nao ter jogadas validas
-        pontuacao = miniMax(tabuleiro, profundidade - 1, adversario, 1 - chamaMax);
+        pontuacao = miniMax(tabuleiro, profundidade, adversario, 1 - chamaMax);
         return pontuacao;
     }
 
@@ -446,8 +447,9 @@ void gameLoopBot() {
             int melhorJogada = -999999;
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
-                    if (campos[i][j] == 3) { // Verifica jogada válida
-                        copiarTabuleiro(campos, camposCopia);
+                    copiarTabuleiro(campos, camposCopia);
+                    if (camposCopia[i][j] == 3) { // Verifica jogada válida
+                        camposCopia[i][j] = jogador;
                         comerPecas(jogador, i, j, camposCopia);
                         pontuacaoJogada = miniMax(camposCopia, escolha, jogador, 1);
                         if (pontuacaoJogada > melhorJogada) {
@@ -467,6 +469,8 @@ void gameLoopBot() {
 
                 printf("O Bot jogou %d,%d\n", melhorI + 1, melhorJ + 1);
                 printf("Vantagem do Bot na profundidade %d: %d\n", escolha, melhorJogada);
+            } else {
+                printf("Erro total");
             }
         }
         
