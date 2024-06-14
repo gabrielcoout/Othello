@@ -32,7 +32,7 @@ int main() {
     //Escolha do modo de jogo
     while(escolha != 3){
 
-        printf("1 - PvP\n2 - PvE\n");
+        printf("1 - PvP\n2 - PvE\n3 - Sair\n");
         scanf("%d", &escolha);
 
         switch (escolha){
@@ -41,6 +41,9 @@ int main() {
             break;
         case 2:
             gameLoopBot();
+            break;
+        case 3:
+            printf("Obrigado por jogar! \n");
             break;
         default:
             printf("Escolha uma opcao valida");
@@ -310,7 +313,9 @@ int valorTabuleiro(int tabuleiro[8][8]){
 
     int valor = 0;
 
-    // valores de cada casa em realcao a posicao no tabuleiro
+    // Valores de cada casa em realcao a posicao no tabuleiro (Os cantos do tabuleiro tem maxima prioridade)
+    // Os adjacentes ao canto são os piores possíveis, e a diagonal do canto é a pior peça que podemos colocar.
+    // As laterais são importantes, e o centro tem sua importancia principalmente no comeco (os cantos do centro (de valor 6) sao importantes de serem alcancados)
     int valoresTabuleiro[8][8] = {
         { 100,  -30,   15,   10,   10,   15, -30, 100 },
         { -30,  -50,    0,    0,    0,    0, -50, -30 },
@@ -459,8 +464,9 @@ void gameLoopBot() {
                     if (camposCopia[i][j] == 3) {                                       // Verifica jogada válida
                         camposCopia[i][j] = jogador;                                    // Altera a posicao para o jogador (necessário na lógica de realizar jogada)
                         comerPecas(jogador, i, j, camposCopia);                         // Faz a jogada nessa jogada valida
-                        pontuacaoJogada = miniMax(camposCopia, escolha, 3 - jogador, 1);    // Chama a funcao pedindo para maximizar o valor
-                        if (pontuacaoJogada > melhorJogada) {
+                        pontuacaoJogada = miniMax(camposCopia, escolha, 3 - jogador, 0);    // Chama a funcao pedindo para maximizar o valor
+                        if (pontuacaoJogada > melhorJogada) {                           // Verifica o valor eh maior que a melhor jogada
+                            // Salva os valores da melhor jogada e qual posicao eh
                             melhorJogada = pontuacaoJogada;
                             melhorI = i;
                             melhorJ = j;
@@ -469,17 +475,15 @@ void gameLoopBot() {
                 }
             }
 
-            if (melhorI != -1 && melhorJ != -1) { // Verifica se encontrou uma jogada
-                campos[melhorI][melhorJ] = jogador;
-                comerPecas(jogador, melhorI, melhorJ, campos); // Chama a função para comer as peças
-                jogador = 3 - jogador;
-                limparJogadasValidas(campos);
+            // Realiza a jogada (não precisa verificar se encontrou jogada pois ja foi verificado anteriormente)
+            campos[melhorI][melhorJ] = jogador;             // Altera a posicao para o jogador (necessário na lógica de realizar jogada)
+            comerPecas(jogador, melhorI, melhorJ, campos);  // Chama a função para comer as peças (terminando assim de fazer a jogada do bot)
+            jogador = 3 - jogador;                          // Troca de jogador para o proximo loop
+            limparJogadasValidas(campos);                   // Limpa as jogadas validas para o proximo loop
 
-                printf("O Bot jogou %d,%d\n", melhorI + 1, melhorJ + 1);
-                printf("Vantagem do Bot na profundidade %d: %d\n", escolha, melhorJogada);
-            } else {
-                printf("Erro total");
-            }
+            printf("O Bot jogou %d,%d\n", melhorI + 1, melhorJ + 1);
+            printf("Vantagem do Bot na profundidade %d: %d\n", escolha, melhorJogada);
+
         }
         
     }
