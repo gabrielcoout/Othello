@@ -56,7 +56,12 @@ int main() {
 
 // Mostra o tabuleiro do jogo com X e O para as respectivas jogadas de cada jogador (e as coordenadas nas jogadas validas)
 void imprimirJogo(int jogador, int campos[8][8]) {
-    printf("Turno do jogador %d\n", jogador);
+    printf("Turno do jogador %d: ", jogador);
+    if (jogador == 1) {
+        printf("(X) \n");
+    }else{
+        printf("(O) \n");
+    }
     printf(" -----------------------------------------------------------------\n");
     for (int i = 0; i < 8; i++) {
         printf("%d|", i+1);
@@ -199,7 +204,8 @@ void gameLoop() {
 
     while (jogadasValidas(jogador, campos) || jogadasValidas(3 - jogador, campos)) { //enquanto pelo menos um dos jogadores tiverem jogadas validas
 
-        limparJogadasValidas(campos);
+        limparJogadasValidas(campos);   // Alem de ser uma flag, a jogadas validas tambem alteram o tabuleiro (mostrando quais casas sao validas)
+                                        // Sendo assim, necessario limpar o tabuleiro depois (caso tenha jogadas validas)
         
         if (!jogadasValidas(jogador, campos)) {
             printf("Jogador %d não tem jogadas válidas.\n", jogador);
@@ -207,7 +213,7 @@ void gameLoop() {
             jogador = (jogador == 1) ? 2 : 1;
             jogadasValidas(jogador, campos);
     	}
-
+     
         imprimirJogo(jogador, campos);
         jogada(&jogador, campos);
         printf("\n");
@@ -451,7 +457,7 @@ void gameLoopBot() {
         jogadasValidas(jogador , campos); // Mostra as jogadas validas 
         
         if (jogador == 1) { // Entra na logica da jogada de um jogador
-            printf("Valor do tabuleiro atualmente: %d\n", valorTabuleiro(campos));
+            printf("Valor do tabuleiro atualmente: %d (Segundo a visão do bot)\n", valorTabuleiro(campos));
             imprimirJogo(jogador, campos);
             jogada(&jogador, campos);
             limparJogadasValidas(campos);
@@ -481,8 +487,8 @@ void gameLoopBot() {
             jogador = 3 - jogador;                          // Troca de jogador para o proximo loop
             limparJogadasValidas(campos);                   // Limpa as jogadas validas para o proximo loop
 
-            printf("O Bot jogou %d,%d\n", melhorI + 1, melhorJ + 1);
-            printf("Vantagem do Bot na profundidade %d: %d\n", escolha, melhorJogada);
+            printf("\n\nO Bot jogou %d,%d\n", melhorI + 1, melhorJ + 1);
+            printf("Vantagem (para o Bot) na profundidade %d: %d (segundo o bot)\n\n", escolha, melhorJogada);
 
         }
         
