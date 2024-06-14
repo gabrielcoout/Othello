@@ -305,31 +305,31 @@ void debugJogo(int campos[8][8]){
 
 
 // Funcoes para jogada do Computador
-
-// Calcula e devolve o valor do tabuleiro com base no jogador atual
+// Calcula e devolve o valor do tabuleiro. Sendo positivo para o jogador 2 (bot), negativo para o jogador 1.
 int valorTabuleiro(int tabuleiro[8][8]){
 
     int valor = 0;
 
     // valores de cada casa em realcao a posicao no tabuleiro
     int valoresTabuleiro[8][8] = {
-        { 100,  -30,   6,   2,   2,   6, -30, 100 },
-        { -30,  -50,   0,   0,   0,   0, -50, -30 },
-        {   6,    0,   0,   0,   0,   0,   0,   6 },
-        {   2,    0,   0,   3,   3,   0,   0,   2 },
-        {   2,    0,   0,   3,   3,   0,   0,   2 },
-        {   6,    0,   0,   0,   0,   0,   0,   6 },
-        { -30,  -50,   0,   0,   0,   0, -50, -30 },
-        { 100,  -30,   6,   2,   2,   6, -30, 100 }
+        { 100,  -30,   15,   10,   10,   15, -30, 100 },
+        { -30,  -50,    0,    0,    0,    0, -50, -30 },
+        {  15,    0,    6,    2,    2,    6,    0,  15 },
+        {  10,    0,    2,    3,    3,    2,    0,  10 },
+        {  10,    0,    2,    3,    3,    2,    0,  10 },
+        {  15,    0,    6,    2,    2,    6,    0,  15 },
+        { -30,  -50,    0,    0,    0,    0, -50, -30 },
+        { 100,  -30,   15,   10,   10,   15, -30, 100 }
     };
 
 
+    // Percorre o tabuleiro calculando o valor com base em cada casa
     for(int i = 0; i < 8; i++){
         for(int j = 0; j < 8; j++){
-            if(tabuleiro[i][j] == 2){ //maximizar quando for o bot
+            if(tabuleiro[i][j] == 2){ // maximizar quando for o bot
                 valor += valoresTabuleiro[i][j];
             }
-            if(tabuleiro[i][j] == 1){ //minimizar quando for o jogador
+            if(tabuleiro[i][j] == 1){ // minimizar quando for o jogador
                 valor -= valoresTabuleiro[i][j];
             }
         }
@@ -338,6 +338,7 @@ int valorTabuleiro(int tabuleiro[8][8]){
     return valor;
 }
 
+// Funcao que copia os valores do tabuleiro para um tabuleiro auxiliar
 void copiarTabuleiro(int tabuleiroOriginal[8][8], int tabuleiroCopia[8][8]){// void passar os dois //2 for
     
     //Loop para copiar os valores
@@ -350,7 +351,11 @@ void copiarTabuleiro(int tabuleiroOriginal[8][8], int tabuleiroCopia[8][8]){// v
     return;
 }
 
+// Funcao recursiva que procura a melhor jogada.
+// Ela faz uma busca numa arvore recursiva. Sempre querendo uma hora o valor que maximixa naquele nivel da arvore e minimiza o outro
+// E uma vez que eh recursiva, ela tem que ir até o ponto de parada dela para poder ir retornando os valores
 int miniMax(int tabuleiro[8][8], int profundidade, int jogador, int chamaMax){
+    // Declaracao de variaveis
     int valorMaximizador =  -100000;
     int valorMinimizador = 100000;
     int camposCopia[8][8];
@@ -358,29 +363,26 @@ int miniMax(int tabuleiro[8][8], int profundidade, int jogador, int chamaMax){
     int adversario = jogador == 1 ? 2 : 1;
     int flagTemJogada = 0;
 
-    //copiarTabuleiro(tabuleiro, camposCopia);
-    //limparJogadasValidas(camposCopia);
-
-    //Ponto de parada do miniMax
-    if(profundidade == 0 || verificarFimDeJogo(tabuleiro)){ //VERIFICAR
+    // Ponto de parada do miniMax
+    if(profundidade == 0 || verificarFimDeJogo(tabuleiro)){ // Caso a profundidade tenha atingido o que gostariamos ou caso o jogo tenha acabado na profundidade que estamos
         return valorTabuleiro(tabuleiro);
     }
 
-    jogadasValidas(jogador, tabuleiro);
+    jogadasValidas(jogador, tabuleiro); // Deixa o tabuleiro com as jogadas válidas prontas
 
     for(int i = 0; i < 8; i++){
         for(int j = 0;j < 8; j++){
             copiarTabuleiro(tabuleiro, camposCopia);            // Copia o campo somente aqui para nao atrapalhar nas outras jogadas possiveis
             if(camposCopia[i][j] == 3){
                 flagTemJogada = 1;                                  // Altera a flag para que nao caia no caso que nao tem jogadas validas
-                camposCopia[i][j] = jogador;
+                camposCopia[i][j] = jogador;                        // Altera a posicao para o jogador (necessário na lógica de realizar jogada)
                 comerPecas(jogador, i, j, camposCopia);             // Faz a jogada nessa jogada valida
-                pontuacao = miniMax(camposCopia, profundidade - 1, adversario, 1 - chamaMax);
-                if(chamaMax){
+                pontuacao = miniMax(camposCopia, profundidade - 1, adversario, 1 - chamaMax); // Chama a funcao agora sendo o adversário, uma profundidade menor, e o contrario do max/min
+                if(chamaMax){                               // Vamos salvar o maior valor caso seja max
                     if(pontuacao > valorMaximizador){
                         valorMaximizador = pontuacao;
                     }
-                }else{
+                }else{                                      // Vamos salvar o menor valor caso seja min
                     if(pontuacao < valorMinimizador){
                         valorMinimizador = pontuacao;
                     }
@@ -390,19 +392,20 @@ int miniMax(int tabuleiro[8][8], int profundidade, int jogador, int chamaMax){
         }
     }
 
-    if (!flagTemJogada) { // Trata o caso do jogador atual nao ter jogadas validas
+    if (!flagTemJogada) { // Trata o caso do jogador atual nao ter jogadas validas (nao alteramos a profundidade pois nao houve jogada)
         pontuacao = miniMax(tabuleiro, profundidade, adversario, 1 - chamaMax);
         return pontuacao;
     }
 
-    if(chamaMax){
+    if(chamaMax){       //Vamos retornar o maior valor caso seja max
         return valorMaximizador;
-    }else{
+    }else{              //Vamos retornar o menor valor caso seja min
         return valorMinimizador;
     }
 
 }
 
+// Loop para jogar contra o bot
 void gameLoopBot() {
     // Declaração de variáveis
     int escolha = -1;
@@ -412,7 +415,8 @@ void gameLoopBot() {
 
     // Escolha da dificuldade do bot
     system("clear");
-    printf("Escolha a dificuldade do bot: \nmuito fácil          médio          bacalhau\n     |-----------------|----------------|\n     0                 5               10+\n");
+    printf("\t \tEscolha a dificuldade do bot: \n\tmuito fácil          médio          bacalhau\n\t     |-----------------|----------------|\n\t     0                 5               10+\n");
+    printf("\t  Recomendamos jogar na dificuldade 5-6\n\t(por questões velocidade na jogada do bot)\n");
 
     while (escolha < 0) { // Validar para nao passar uma profundidade negativa
         scanf("%d", &escolha);
@@ -421,38 +425,41 @@ void gameLoopBot() {
     // Lógica do loop
     iniciarJogo(campos);
 
-    while (jogadasValidas(jogador, campos) || jogadasValidas(3 - jogador, campos)) { // enquanto pelo menos um dos jogadores tiver jogadas válidas
+    while (jogadasValidas(jogador, campos) || jogadasValidas(3 - jogador, campos)) { // Enquanto pelo menos um dos jogadores tiver jogadas válidas
         limparJogadasValidas(campos);
 
         if (!jogadasValidas(jogador, campos)) { // Verifica se o jogador tem jogadas validas e ja deixa marcada as posicoes com validas
 
-            limparJogadasValidas(campos);
+            limparJogadasValidas(campos);   // Alem de ser uma flag, a jogadas validas tambem alteram o tabuleiro (mostrando quais casas sao validas)
+                                            // Sendo assim, necessario limpar o tabuleiro depois (caso tenha jogadas validas)
 
+            // Fala qual dos jogadores nao tem uma jogada valida
             if(jogador == 1){
                 printf("O jogador nao tem jogadas validas.\n");
             }else{
                 printf("O bot nao tem jogadas validas.\n");
             }
 
-            jogador = 3 - jogador;
+            jogador = 3 - jogador; // Troca de jogador (fizemos isso de formas diferentes ao longo do codigo)
         }
 
-        jogadasValidas(jogador , campos);
- 
-        if (jogador == 1) {
+        jogadasValidas(jogador , campos); // Mostra as jogadas validas 
+        
+        if (jogador == 1) { // Entra na logica da jogada de um jogador
             printf("Valor do tabuleiro atualmente: %d\n", valorTabuleiro(campos));
             imprimirJogo(jogador, campos);
             jogada(&jogador, campos);
             limparJogadasValidas(campos);
-        } else {
-            int melhorJogada = -999999;
+        } else { // Ou na do Bot
+            int melhorJogada = -999999; // Valor muito pequeno para garantir que o 1 return sempre vai ser maior que ele
+            // Percorrendo o tabuleiro
             for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    copiarTabuleiro(campos, camposCopia);
-                    if (camposCopia[i][j] == 3) { // Verifica jogada válida
-                        camposCopia[i][j] = jogador;
-                        comerPecas(jogador, i, j, camposCopia);
-                        pontuacaoJogada = miniMax(camposCopia, escolha, jogador, 1);
+                for (int j = 0; j < 8; j++) {   
+                    copiarTabuleiro(campos, camposCopia);                               // Copiamos o tabuleiro sempre aqui para nenhuma jogada do bot atrapalhar a outra
+                    if (camposCopia[i][j] == 3) {                                       // Verifica jogada válida
+                        camposCopia[i][j] = jogador;                                    // Altera a posicao para o jogador (necessário na lógica de realizar jogada)
+                        comerPecas(jogador, i, j, camposCopia);                         // Faz a jogada nessa jogada valida
+                        pontuacaoJogada = miniMax(camposCopia, escolha, 3 - jogador, 1);    // Chama a funcao pedindo para maximizar o valor
                         if (pontuacaoJogada > melhorJogada) {
                             melhorJogada = pontuacaoJogada;
                             melhorI = i;
@@ -465,7 +472,7 @@ void gameLoopBot() {
             if (melhorI != -1 && melhorJ != -1) { // Verifica se encontrou uma jogada
                 campos[melhorI][melhorJ] = jogador;
                 comerPecas(jogador, melhorI, melhorJ, campos); // Chama a função para comer as peças
-                jogador = (jogador == 1) ? 2 : 1;
+                jogador = 3 - jogador;
                 limparJogadasValidas(campos);
 
                 printf("O Bot jogou %d,%d\n", melhorI + 1, melhorJ + 1);
@@ -478,25 +485,33 @@ void gameLoopBot() {
     }
 
     fimDeJogoBot(campos);
+    
+    return;
 }
 
+// Funcao auxuliar que verifica se nenhum dos jogadores tem jogadas validas
 int verificarFimDeJogo(int tabuleiro[8][8]){
 
-    limparJogadasValidas(tabuleiro);
+    limparJogadasValidas(tabuleiro); //Garante que não veio nenhuma casa como valida para jogar
 
     if(!jogadasValidas(1, tabuleiro) && !jogadasValidas(2, tabuleiro)){
         return 1; // Nao tem jogadas validas
     }
 
-    limparJogadasValidas(tabuleiro);
+    limparJogadasValidas(tabuleiro);    // Alem de ser uma flag, a jogadas validas tambem alteram o tabuleiro (mostrando quais casas sao validas)
+                                        // Sendo assim, necessario limpar o tabuleiro depois (caso tenha jogadas validas)
 
     return 0; // Tem jogadas validas
 }
 
+// Funcao chamada ao final do jogo com o bot. Contabiliza quantas pecas de vantagem o jogador, ou bot tiveram. E declara o vencedor ou o empate
 void fimDeJogoBot(int tabuleiro[8][8]){
 
+    // Declaracao de variaveis
     int pecasJogador1 = 0, pecasBot = 0;
+
     printf("Jogo acabou.\n");
+    // Loop para contagem de pecas
     for (int i = 0; i < 8; i++){
         for (int j = 0; j < 8; j++){
             if (tabuleiro[i][j] == 1){
@@ -507,6 +522,8 @@ void fimDeJogoBot(int tabuleiro[8][8]){
             }
         }
     }
+    
+    // Print do resultado
     if (pecasJogador1 > pecasBot){
         printf("Jogador venceu! por %d\n", pecasJogador1 - pecasBot);
     }
